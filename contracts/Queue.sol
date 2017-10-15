@@ -48,12 +48,12 @@ contract Queue {
 	/* Removes the first person in line; either when their time is up or when
 	 * they are done with their purchase
 	 */
-	function pop() {
+	function dequeue() {
 		// YOUR CODE HERE
 	}
 
 	/* Places `addr` in the first empty position in the queue */
-	function put(address addr) {
+	function enqueue(address addr) {
 		// YOUR CODE HERE
 	}
 }

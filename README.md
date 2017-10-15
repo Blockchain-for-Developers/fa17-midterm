@@ -8,10 +8,12 @@ Your task is to complete both `Token.sol` and `Crowdsale.sol` such that they eac
 
 Implement all three contracts and test them in order to demonstrate your understanding of external calls, timestamping, testing, and everything else learned so far!
 
-**All work should be done in _contracts/Crowdsale.sol_, _contracts/Queue.sol_ and _contracts/Token.sol_. Do not make changes to any other files**
+**All work should be done in _contracts/Crowdsale.sol_, _contracts/Queue.sol_ and _contracts/Token.sol_. Do not make changes to any other files. The exception to this is for testing: add as many test files as you need, of course**
 
 ## Rules
-You will be building an ERC20-compliant token platform with a few caveats. Firstly, the token sale will be capped, so there can only be a limited number of tokens in circulation. Tokens can be minted and destroyed (burned), as well as refunded. The crux of the project is to set up a crowdsale where buyers must enter a _queue_, waiting in line to place their order for tokens. Details follow:
+You will be building an ERC20-compliant token platform with a few caveats. Firstly, the token sale will be capped, so there can only be a limited number of tokens in circulation. Tokens can be minted and destroyed (burned), as well as refunded. The crux of the project is to set up a crowdsale where buyers must enter a **Queue**, waiting in line to place their order for tokens. Buyers waiting in line must make sure they are not the last person in line: you must have someone behind you to place a token order!
+
+Details follow:
 * `Crowdsale.sol` contract specifications:
 	* Must deploy `Token.sol`
 	* The contract must keep track of how many tokens have been sold
@@ -30,7 +32,7 @@ You will be building an ERC20-compliant token platform with a few caveats. First
 			* This amount would be subtracted from `totalSupply` in `Token.sol`
 		* Must be able to receive funds from contract after the sale is over
 	* Buyers:
-		* Must be able to buy tokens directly from the contract and as long as the sale has not ended and only if they are first in the queue
+		* Must be able to buy tokens directly from the contract and as long as the sale has not ended, if they are first in the queue and there is someone waiting line behind them
 			* This would change their balance in `Token.sol`
 			* This would change the number of tokens sold
 		* Must be able to refund their tokens as long as the sale has not ended. Their place in the queue does not matter
@@ -48,8 +50,8 @@ You will be building an ERC20-compliant token platform with a few caveats. First
 		* `getFirst()`: Returns the address of the person in the front of the queue
 		* `checkPlace()`: Allows `msg.sender` to check their position in the queue
 		* `checkTime()`: Allows anyone to expel the first person in line if their time limit is up
-		* `pop()`: Removes the first person in line; either when their time is up or when they are done with their purchase
-		* `put(address addr)`: Places `addr` in the first empty position in the queue
+		* `dequeue()`: Removes the first person in line; either when their time is up or when they are done with their purchase
+		* `enqueue(address addr)`: Places `addr` in the first empty position in the queue
 	* The queue should only permit buyers to place an order if they are not the only ones in line, i.e. if there is at least one person waiting behind them
 	* Events:
 		* Fired when someone's time limit is over and they are ejected from the front of the queue
@@ -77,9 +79,11 @@ You have a lot freedom to carry out this assignment as you please. You will be g
 	* Use descriptive strings for test cases and assertions
 
 ## Extra Credit
-* [MetaMask](https://metamask.io/) or [frontend integration](https://github.com/ethereum/web3.js/)
+* Have the token get more expensive with each purchase. In other words, implement an early-bird incentive
+* Enforce a black/white-list of addresses that are/aren't able to participate in the crowdsale
 * Provide a use-case contract for your token, something buyers would use it for
 	* This could be a small game or another novel use; it doesn't have to be too sophisticated
+* [MetaMask](https://metamask.io/) or [frontend integration](https://github.com/ethereum/web3.js/)
 
 ## Testing 
 You can verify that your smart contract is implemented correctly with `truffle test`. Be sure to have a testrpc server running in a separate terminal.
