@@ -96,6 +96,6 @@ If you're having trouble passing the tests and would like to play around with th
 2. Run `truffle console`, This will open up a Node JavaScript console that is connected to your testrpc server
 
 ## Submission Instructions
-Please fork this repo and push your code up to your fork. Please fill out this Google Form to let us know where you've got your answers: https://goo.gl/forms/.
+Please fork this repo and push your code up to your fork. Please fill out this Google Form to let us know where you've got your answers: https://goo.gl/forms/KGoAOfsz2QSTyIEy1.
 
 Please feel free to reach out to the staff via Piazza should you run into any trouble.
