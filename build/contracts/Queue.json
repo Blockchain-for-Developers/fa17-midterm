@@ -1,0 +1,90 @@
+{
+  "contract_name": "Queue",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getFirst",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "qsize",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "enqueue",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "dequeue",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "checkPlace",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "checkTime",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "empty",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x60606040526000805460ff19166005179055341561001c57600080fd5b5b6101e08061002c6000396000f300606060405236156100805763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416631e22314381146100855780633e3c9eae146100c15780638f807f6b146100ea578063957908d114610118578063ad7d59fc146100c1578063e0c6190d14610118578063f2a75fe41461016b575b600080fd5b341561009057600080fd5b610098610192565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b34156100cc57600080fd5b6100d4610192565b60405160ff909116815260200160405180910390f35b34156100f557600080fd5b61011673ffffffffffffffffffffffffffffffffffffffff6004351661019e565b005b341561012357600080fd5b6101166101a2565b005b34156100cc57600080fd5b6100d4610192565b60405160ff909116815260200160405180910390f35b341561012357600080fd5b6101166101a2565b005b341561017657600080fd5b61017e610192565b604051901515815260200160405180910390f35b60005b90565b60005b90565b5b50565b5b565b60005b90565b5b565b60005b905600a165627a7a72305820b4e1f5902912c444ff1d15f41f6b8166bdb0251f52774e34824419b9123513550029",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1508797318543
+}
