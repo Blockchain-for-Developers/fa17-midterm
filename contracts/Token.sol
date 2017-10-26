@@ -41,7 +41,8 @@ contract Token is ERC20Interface {
     		// Remove sent value from senders account first, then apply to receivers account (prevent reentrancy)
     		balances[msg.sender] -= _value;
     		balances[_to] += _value;
-    		Transfer(msg.sender, _to, _value); // Trigger transfer event
+    		// Trigger transfer event
+    		Transfer(msg.sender, _to, _value); 
     		return true;
     	}
     	// Return false if sender lacks adequate balance
@@ -53,18 +54,37 @@ contract Token is ERC20Interface {
     /// @param _to The address of the recipient
     /// @param _value The amount of token to be transferred
     /// @return Whether the transfer was successful or not
-    function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
+    function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
+    	// Checks allowance and from balance has enough value, checks value positive and for overflow
+    	if (allowances[_from][msg.sender] >= _value && balances[_from] >= _value && _value > 0 && balances[_to] + _value > balances[_to]) {
+    		// Removes value from allowance and balance, then transfers to _to
+    		allowances[_from][msg.sender] -= _value;
+    		balances[_from] -= _value;
+    		balances[_to] += _value;
+			// Triggers transfer event
+			Transfer(_from, _to, _value); 
+    		return true;
+    	}
+    	return false;
+    }
 
     /// @notice `msg.sender` approves `_spender` to spend `_value` tokens
     /// @param _spender The address of the account able to transfer the tokens
     /// @param _value The amount of tokens to be approved for transfer
     /// @return Whether the approval was successful or not
-    function approve(address _spender, uint256 _value) returns (bool success);
+    function approve(address _spender, uint256 _value) returns (bool success) {
+    	// Need to allow approver to remove approval, so this method directly sets value instead of adding to it
+    	allowances[msg.sender][_spender] = value;
+    	Approval(msg.sender, _spender, _value);
+    	return true;
+    }
 
     /// @param _owner The address of the account owning tokens
     /// @param _spender The address of the account able to transfer the tokens
     /// @return Amount of remaining tokens allowed to spent
-    function allowance(address _owner, address _spender) constant returns (uint256 remaining);
+    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+    	return allowances[_owner][_spender];
+    }
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Approval(address indexed _owner, address indexed _spender, uint256 _value);}
