@@ -19,18 +19,22 @@ contract Crowdsale {
 	Token   private		token;
 	Queue 	public 		queue;
 
+	event TokenDelivered(address receiver, bool status);
+	event EtherRefunded(address receiver, bool status);
+
+
 	modifier isCreator() {
 		require(msg.sender == creator);
 		_;
 	}
 
 	modifier saleHasEnded() {
-		require(now > startingTime);
+		require(now > endingTime);
 		_;
 	}
 
 	modifier saleHasNotEnded() {
-		require(now <= startingTime);
+		require(startingTime < now && now < endingTime);
 		_;
 	}	
 
@@ -52,7 +56,34 @@ contract Crowdsale {
 	}
 
 	function deliver() payable saleHasNotEnded() returns (bool) {
-		
+		uint tokensAmount = msg.value * exchangeRate;
+
+		if (tokensAmount > (token.totalSupply() - totalRaised)) {
+			revert();
+			return false;
+		}
+
+		queue.enqueue(msg.sender);
+		while (queue.checkPlace() > 1) {  // until first in line
+			continue;
+		}
+		require((queue.checkPlace() == 1);
+
+		queue.checkTime();
+		if (queue.checkPlace() == 0) {  // times up
+			revert();
+			TokenDelivered(msg.sender, false);
+			return false;
+		}
+
+		while (queue.qsize() < 1) {  // until at least 2 nodes in the queue
+			continue;
+		}
+		queue.dequeue();
+		bool success = token.transfer(msg.sender, tokensAmount);
+		TokenDelivered(msg.sender, success);
+		return success;
+
 	}
 	
 
@@ -61,14 +92,14 @@ contract Crowdsale {
 		if (good) {
 			good = msg.sender.send(amount);
 		}
+		EtherRefunded(msg.sender, good); // event
 		return good;
-		// RefundCompleted(msg.sender, success); // event
 	}
 
 	function withdrawFunds() saleHasEnded() isCreator() returns (bool) {
 		return creator.send(currentBalence);
 	}
 
-	function () { throw; }
+	function () { revert(); }
 
 }
