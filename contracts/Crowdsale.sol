@@ -54,8 +54,8 @@ contract Crowdsale {
 		token.mint(amount);
 	}
 
-	function burn(uint256 amount) isCreator() returns (bool) {
-		return token.burn(amount);
+	function burn(uint256 amount) isCreator() {
+		token.burn(amount);
 	}
 
 	function deliver() payable saleHasNotEnded() returns (bool) {

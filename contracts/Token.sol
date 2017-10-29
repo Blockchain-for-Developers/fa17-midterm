@@ -18,44 +18,41 @@ contract Token is ERC20Interface {
 	// 	- token.transfer(msg.sender, tokensAmount);
 	// 	- token.refund(msg.sender, amount);
 	// 	---> these 5 functions
+  event Transfer(address indexed _from, address indexed _to, uint256 _value);
+  event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+  event Burn(uint256 _value);
 
   // Balances for each account
   mapping(address => uint256) private balances;
-  uint256 private totalSupplyAmount;
 
   // Owner of account approves the transfer of an amount to another account
   mapping(address => mapping (address => uint256)) allowed;
 
   function Token(uint _totalSupplyAmount) {
-    totalSupplyAmount = _totalSupplyAmount
+    totalSupply = _totalSupplyAmount;
   }
 
-  function mint(uint256 amount) public{
-    totalSupplyAmount += amount;
+  function mint(uint256 amount) {
+    totalSupply += amount;
   }
 
-  function burn(uint256 amount) public{
-    totalSupplyAmount -= amount;
+  function burn(uint256 amount) {
+    totalSupply -= amount;
     Burn(amount);
-  }
-
-  function totalSupply() public returns (uint256 total){
-    return totalSupplyAmount;
   }
 
   /// @notice send `_value` token to `_to` from `msg.sender`
   /// @param _to The address of the recipient
   /// @param _value The amount of token to be transferred
   /// @return Whether the transfer was successful or not
-  function transfer(address _to, uint256 _value) public{
+  function transfer(address _to, uint256 _value) public returns (bool) {
     if (balances[msg.sender] >= _value && _value > 0 && balances[_to] + _value > balances[_to]) {
       balances[msg.sender] -= _value;
       balances[_to] += _value;
       Transfer(msg.sender, _to, _value);
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /// @notice send `_value` token to `_to` from `_from` on the condition it is approved by `_from`
@@ -83,8 +80,8 @@ contract Token is ERC20Interface {
   }
 
   function refund(address _from, uint256 _value) public returns (bool success){
-    if (balances[msg.sender] >= _value && _value > 0) {
-      balances[msg.sender] -= _value;
+    if (balances[_from] >= _value && _value > 0) {
+      balances[_from] -= _value;
       return true;
     } else {
       return false;
@@ -114,7 +111,5 @@ contract Token is ERC20Interface {
     return allowed[_owner][_spender];
   }
 
-  event Transfer(address indexed _from, address indexed _to, uint256 _value);
-  event Approval(address indexed _owner, address indexed _spender, uint256 _value);
-  event Burn(uint256 _value);
+  
 }
