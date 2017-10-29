@@ -47,7 +47,7 @@ contract Crowdsale {
 		creator = msg.sender;
 		exchangeRate = _exhangeRate;
 		token = new Token(totalSupply);
-		queue = new Queue();
+		queue = new Queue(100);
 	}
 
 	function mint(uint256 amount) isCreator() {

@@ -82,7 +82,7 @@ contract Queue {
 		if(currentSize >= size){
 			return;
 		}
-		ParticipantsList.push(Participant( addr, now + timeLimit));
+		ParticipantsList.push(Participant( addr, now ));
 		currentSize = currentSize + 1;
 	}
 }
