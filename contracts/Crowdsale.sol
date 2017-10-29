@@ -35,7 +35,7 @@ contract Crowdsale {
 	modifier saleHasNotEnded() {
 		require(startingTime < now && now < endingTime);
 		_;
-	}	
+	}
 
 	function Crowdsale(
 		uint256 _exhangeRate, 
@@ -92,12 +92,12 @@ contract Crowdsale {
 		return success;
 
 	}
-	
+
 
 	function refund(uint256 amount) saleHasNotEnded() returns (bool) {
 		bool good = token.refund(msg.sender, amount);
 		if (good) {
-			good = msg.sender.send(amount);
+			good = msg.sender.send(amount*exchangeRate);
 		}
 		EtherRefunded(msg.sender, good); // event
 		return good;
