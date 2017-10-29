@@ -12,17 +12,16 @@ contract Queue {
 	uint8 size = 5;
 	uint timeLimit;
 	uint8 currentSize;
-	Participant[] participantsList;
+	Participant[] ParticipantsList;
 
 	struct Participant {
 		address a;
 		uint timeStamp;
 	}
 
-	function Queue() {
+	function Queue(uint _timeLimit) {
 		// initinital constructor
-		currentSize = 0;
-		timeLimit = 10;
+		timeLimit = _timeLimit;
 	}
 
 	/* Returns the number of people waiting in line */
@@ -38,7 +37,7 @@ contract Queue {
 	/* Returns the address of the person in the front of the queue */
 	function getFirst() constant returns(address) {
 		if (currentSize > 0){
-			return participantsList[0].a;
+			return ParticipantsList[0].a;
 		}
 		return address(0);
 	}
@@ -49,7 +48,7 @@ contract Queue {
 	 */
 	function checkPlace() constant returns(uint8) {
 		for (uint8 i = 0; i < currentSize; i++) {
-			if(participantsList[i].a  == msg.sender) {
+			if(ParticipantsList[i].a  == msg.sender) {
 				return i;
 			}
 		}
@@ -61,8 +60,8 @@ contract Queue {
 	 */
 	function checkTime() {
 		if (
-			currentSize > 0 && 
-			participantsList[0].timeStamp + timeLimit < now) 
+			currentSize > 0 &&
+			ParticipantsList[0].timeStamp + timeLimit < now)
 		{
 			dequeue();
 		}
@@ -73,16 +72,17 @@ contract Queue {
 	 */
 	function dequeue() {
 		if (currentSize > 0) {
-			delete participantsList[0];
+			delete ParticipantsList[0];
 			currentSize = currentSize - 1;
 		}
 	}
 
 	/* Places `addr` in the first empty position in the queue */
-	function enqueue(address addr, uint amount) {
-		if (currentSize < size) {
-			participantsList.push(Participant(addr, now));
-			currentSize += 1;
+	function enqueue(address addr) {
+		if(currentSize >= size){
+			return;
 		}
+		ParticipantsList.push(Participant( addr, now + timeLimit));
+		currentSize = currentSize + 1;
 	}
 }
