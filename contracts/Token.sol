@@ -21,22 +21,26 @@ contract Token is ERC20Interface {
 
   // Balances for each account
   mapping(address => uint256) private balances;
-  uint256 private totalSupply;
+  uint256 private totalSupplyAmount;
 
   // Owner of account approves the transfer of an amount to another account
   mapping(address => mapping (address => uint256)) allowed;
 
+  function Token(uint _totalSupplyAmount) {
+    totalSupplyAmount = _totalSupplyAmount
+  }
+
   function mint(uint256 amount) public{
-    totalSupply+=amount;
+    totalSupplyAmount += amount;
   }
 
   function burn(uint256 amount) public{
-    totalSupply-=amount;
+    totalSupplyAmount -= amount;
     Burn(amount);
   }
 
   function totalSupply() public returns (uint256 total){
-    return totalSupply;
+    return totalSupplyAmount;
   }
 
   /// @notice send `_value` token to `_to` from `msg.sender`
@@ -67,7 +71,7 @@ contract Token is ERC20Interface {
         Transfer(_from, _to, _value);
         return true;
       } else if (allowance(_from, msg.sender)<=_value){
-        allowed[_from][msg.sender]-=value;
+        allowed[_from][msg.sender] -= _value;
         balances[_from] -= _value;
         balances[_to] += _value;
         Transfer(_from, _to, _value);

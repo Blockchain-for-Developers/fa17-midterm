@@ -39,14 +39,14 @@ contract Crowdsale {
 
 	function Crowdsale(
 		uint256 _exhangeRate, 
-		uint256 totalSupply, 
+		uint256 _totalSupply, 
 		uint _timeInMinutesForFundraising) 
 	{
 		startingTime = now;
 		endingTime = startingTime + (_timeInMinutesForFundraising * 1 minutes);
 		creator = msg.sender;
 		exchangeRate = _exhangeRate;
-		token = new Token(totalSupply);
+		token = new Token(_totalSupply);
 		queue = new Queue(100);
 	}
 
@@ -66,7 +66,7 @@ contract Crowdsale {
 			return false;
 		}
 
-		queue.enqueue(msg.sender, tokensAmount);
+		queue.enqueue(msg.sender);
 
 		while (queue.checkPlace() > 1) {  // until first in line
 			continue;
