@@ -19,10 +19,9 @@ contract Queue {
 		uint timeStamp;
 	}
 
-	function Queue() {
+	function Queue(uint _timeLimit) {
 		// initinital constructor
-		currentSize = 0;
-		timeLimit = 10;
+		timeLimit = _timeLimit;
 	}
 
 	/* Returns the number of people waiting in line */
