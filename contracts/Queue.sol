@@ -16,7 +16,7 @@ contract Queue {
 
 	struct Participant {
 		address a;
-		uint t;
+		uint timteStamp;
 		uint tokensAmount;
 	}
 
@@ -63,7 +63,7 @@ contract Queue {
 	function checkTime() {
 		if(
 			currentSize > 0 && 
-			participantsList[0].t + timeLimit < now) 
+			participantsList[0].timteStamp + timeLimit < now) 
 		{
 			dequeue();
 		}
