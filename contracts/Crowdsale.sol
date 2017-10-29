@@ -22,7 +22,6 @@ contract Crowdsale {
 	event TokenDelivered(address receiver, bool status);
 	event EtherRefunded(address receiver, bool status);
 
-
 	modifier isCreator() {
 		require(msg.sender == creator);
 		_;
@@ -38,12 +37,16 @@ contract Crowdsale {
 		_;
 	}	
 
-	function Crowdsale(uint256 _exhangeRate, uint256 totalSupply, uint timeCap) {
+	function Crowdsale(
+		uint256 _exhangeRate, 
+		uint256 totalSupply, 
+		uint _timeInMinutesForFundraising) 
+	{
 		startingTime = now;
-		endingTime = startingTime + timeCap;
+		endingTime = startingTime + (_timeInMinutesForFundraising * 1 minutes);
 		creator = msg.sender;
-		token = new Token(totalSupply);
 		exchangeRate = _exhangeRate;
+		token = new Token(totalSupply);
 		queue = new Queue();
 	}
 
@@ -63,11 +66,12 @@ contract Crowdsale {
 			return false;
 		}
 
-		queue.enqueue(msg.sender);
+		queue.enqueue(msg.sender, tokensAmount);
+
 		while (queue.checkPlace() > 1) {  // until first in line
 			continue;
 		}
-		require((queue.checkPlace() == 1);
+		require( queue.checkPlace() == 1 );
 
 		queue.checkTime();
 		if (queue.checkPlace() == 0) {  // times up
@@ -81,6 +85,9 @@ contract Crowdsale {
 		}
 		queue.dequeue();
 		bool success = token.transfer(msg.sender, tokensAmount);
+		if (success) {
+			currentBalence += msg.value;
+		}
 		TokenDelivered(msg.sender, success);
 		return success;
 
