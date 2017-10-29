@@ -66,7 +66,7 @@ contract Token is ERC20Interface {
         balances[_to] += _value;
         Transfer(_from, _to, _value);
         return true;
-      } else if (allowance(_from, msg.sender)<=value){
+      } else if (allowance(_from, msg.sender)<=_value){
         allowed[_from][msg.sender]-=value;
         balances[_from] -= _value;
         balances[_to] += _value;
