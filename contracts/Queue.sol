@@ -9,54 +9,61 @@ pragma solidity ^0.4.15;
 
 contract Queue {
 
-
 	uint8 size = 5;
-	uint8 curSize;
 	uint timeLimit;
-	participant[] participantsList;
+	uint8 currentSize;
+	Participant[] participantsList;
 
-	struct participant{
+	struct Participant {
 		address a;
-		uint timeLimit;
+		uint timeStamp;
 	}
 
-	function Queue(uint  _timeLimit) {
-		timeLimit = _timeLimit;
+	function Queue() {
+		// initinital constructor
+		currentSize = 0;
+		timeLimit = 10;
 	}
 
 	/* Returns the number of people waiting in line */
 	function qsize() constant returns(uint8) {
-		return curSize;
+		return currentSize;
 	}
 
 	/* Returns whether the queue is empty or not */
 	function empty() constant returns(bool) {
-		return curSize == 0;
+		return (currentSize == 0);
 	}
 
 	/* Returns the address of the person in the front of the queue */
 	function getFirst() constant returns(address) {
-		if(curSize == 0){
-			return address(0);
+		if (currentSize > 0){
+			return participantsList[0].a;
 		}
-		return participantsList[0].a;
+		return address(0);
 	}
 
-	/* Allows `msg.sender` to check their position in the queue */
+	/* Allows `msg.sender` to check their position in the queue.
+	 * Returns the 1-indexed position of the sender in the line.
+	 * If person is not in line, returns 0.
+	 */
 	function checkPlace() constant returns(uint8) {
-		for(uint8 i = 0; i < curSize; i++){
-			if(participantsList[i].a  == msg.sender){
+		for (uint8 i = 0; i < currentSize; i++) {
+			if(participantsList[i].a  == msg.sender) {
 				return i;
 			}
 		}
-		revert();
+		return 0;
 	}
 
 	/* Allows anyone to expel the first person in line if their time
 	 * limit is up
 	 */
 	function checkTime() {
-		if(participantsList[0].timeLimit < now){
+		if (
+			currentSize > 0 && 
+			participantsList[0].timeStamp + timeLimit < now) 
+		{
 			dequeue();
 		}
 	}
@@ -65,19 +72,17 @@ contract Queue {
 	 * they are done with their purchase
 	 */
 	function dequeue() {
-		delete participantsList[0];
-		curSize = curSize - 1;
-		if(curSize> 0){
-			participantsList[0].timeLimit = now + timeLimit;
+		if (currentSize > 0) {
+			delete participantsList[0];
+			currentSize = currentSize - 1;
 		}
 	}
 
 	/* Places `addr` in the first empty position in the queue */
-	function enqueue(address addr) {
-		if(curSize >= size - 1){
-			return;
+	function enqueue(address addr, uint amount) {
+		if (currentSize < size) {
+			participantsList.push(Participant(addr, now));
+			currentSize += 1;
 		}
-		participantsList.push(participant( addr, now + timeLimit));
-		curSize = curSize + 1;
 	}
 }
