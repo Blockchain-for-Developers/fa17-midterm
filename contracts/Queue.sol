@@ -21,6 +21,7 @@ contract Queue {
 
 	function Queue(uint _timeLimit) {
 		// initinital constructor
+		currentSize = 0;
 		timeLimit = _timeLimit;
 	}
 
@@ -73,7 +74,7 @@ contract Queue {
 	function dequeue() {
 		if (currentSize > 0) {
 			delete ParticipantsList[0];
-			currentSize = currentSize - 1;
+			currentSize -= 1;
 		}
 	}
 
@@ -84,6 +85,6 @@ contract Queue {
 			return;
 		}
 		ParticipantsList.push(Participant( addr, now ));
-		currentSize = currentSize + 1;
+		currentSize += 1;
 	}
 }
