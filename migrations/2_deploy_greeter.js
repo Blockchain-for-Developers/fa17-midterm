@@ -1,9 +1,9 @@
-var BadAuction = artifacts.require("./BadAuction.sol");
-var GoodAuction = artifacts.require("./GoodAuction.sol");
-var Poisoned = artifacts.require("./Poisoned.sol");
+var Queue = artifacts.require("./Queue.sol");
+var Crowdsale = artifacts.require("./Token.sol");
+var Token = artifacts.require("./Crowdsale.sol");
 
 module.exports = function(deployer) {
-    deployer.deploy(BadAuction);
-    deployer.deploy(GoodAuction);
-    deployer.deploy(Poisoned);
+    deployer.deploy(Queue);
+    deployer.deploy(Crowdsale);
+    deployer.deploy(Token);
 };

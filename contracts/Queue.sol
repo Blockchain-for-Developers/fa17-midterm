@@ -74,9 +74,10 @@ contract Queue {
 
 	/* Places `addr` in the first empty position in the queue */
 	function enqueue(address addr) {
-		if(curSize >= size - 1){
+		if(curSize >= size){
 			return;
 		}
+
 		participantsList.push(participant( addr, now + timeLimit));
 		curSize = curSize + 1;
 	}
