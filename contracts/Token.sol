@@ -10,4 +10,12 @@ import './interfaces/ERC20Interface.sol';
 
 contract Token is ERC20Interface {
 	// YOUR CODE HERE
+
+	// we need functions from token including following:
+	// 	- token.mint(amount);
+	// 	- token.burn(amount);
+	// 	- token.totalSupply()
+	// 	- token.transfer(msg.sender, tokensAmount);
+	// 	- token.refund(msg.sender, amount);
+	// 	---> these 5 functions
 }
