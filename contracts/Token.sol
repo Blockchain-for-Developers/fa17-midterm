@@ -32,7 +32,7 @@ contract Token is ERC20Interface {
     totalSupply = _totalSupplyAmount;
   }
 
-  function totalSupply() public{
+  function totalSupply() public returns (uint256){
     return totalSupply;
   }
 
