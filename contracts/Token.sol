@@ -17,6 +17,8 @@ contract Token is ERC20Interface {
 	// 	- token.transfer(msg.sender, tokensAmount);
 	// 	- token.refund(msg.sender, amount);
 	// 	---> these 5 functions
+  uint totalSupply;
+
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
   event Approval(address indexed _owner, address indexed _spender, uint256 _value);
   event Burn(uint256 _value);
