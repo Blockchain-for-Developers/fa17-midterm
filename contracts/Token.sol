@@ -9,7 +9,6 @@ import './interfaces/ERC20Interface.sol';
  */
 
 contract Token is ERC20Interface {
-	// YOUR CODE HERE
 
 	// we need functions from token including following:
 	// 	- token.mint(amount);
@@ -98,7 +97,7 @@ contract Token is ERC20Interface {
   /// @param _spender The address of the account able to transfer the tokens
   /// @param _value The amount of tokens to be approved for transfer
   /// @return Whether the approval was successful or not
-  function approve(address _spender, uint256 _value) public returns (bool success){
+  function approve(address _spender, uint256 _value) public returns (bool success) {
     allowed[msg.sender][_spender]+=_value;
     Approval(msg.sender, _spender, _value);
     return true;
