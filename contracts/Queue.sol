@@ -47,9 +47,9 @@ contract Queue {
 	 * Returns the 1-indexed position of the sender in the line.
 	 * If person is not in line, returns 0.
 	 */
-	function checkPlace() constant returns(uint8) {
+	function checkPlace(address add) constant returns(uint8) {
 		for (uint8 i = 0; i < currentSize; i++) {
-			if(ParticipantsList[i].a  == msg.sender) {
+			if(ParticipantsList[i].a  == add) {
 				return i;
 			}
 		}
