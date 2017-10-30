@@ -131,7 +131,7 @@ contract Crowdsale {
 
 	function removeContract() public isCreator() saleHasEnded() {
 		selfdestruct(msg.sender);
-	}    
+	}
 
 	function () { revert(); }
 
