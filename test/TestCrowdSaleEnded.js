@@ -27,13 +27,13 @@ contract('TestCrowdsale', function(accounts) {
             totalSupply,
             timeLimit,
             {from: owner},
-            );
+        );
         crowdsale = c;
     });
 
     /* Group test cases together 
-     * Make sure to provide descriptive strings for method arguements and
-     * assert statements
+        Make sure to provide descriptive strings for method arguements and
+        assert statements
      */
     describe('Initialization', function() {
         it("TestInit", async function() {
@@ -62,11 +62,11 @@ contract('TestCrowdsale', function(accounts) {
             }
 
             let boolean = await crowdsale.deliver.call({from: buyer1, value: 10});
-            assert equal(false, boolean, "buyer shouldnt be able to buy");
+            assert.equal(false, boolean, "buyer shouldnt be able to buy");
             let tokensold = await crowdsale.totalRaised.call();
             let curBalance = await crowdsale.currentBalance.call();
-            assert equal(tokensold, 0, "different token sold amount");
-            assert equal(curBalance, 0, "different currentBalance");
+            assert.equal(tokensold, 0, "different token sold amount");
+            assert.equal(curBalance, 0, "different currentBalance");
 
         });
         
