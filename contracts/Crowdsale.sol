@@ -86,16 +86,22 @@ contract Crowdsale {
 		}
 		require(queue.checkPlace() == 1);
 
+		while (queue.qsize() < 1) {  // make sure the buyer always have ppl behind
+			queue.checkTime();
+			if (queue.checkPlace() == 0) {  // times up
+				//revert();
+				msg.sender.transfer(msg.value);
+				TokenDelivered(msg.sender, false);
+				return false;
+			}
+			continue;
+		}
 		queue.checkTime();
 		if (queue.checkPlace() == 0) {  // times up
 			//revert();
 			msg.sender.transfer(msg.value);
 			TokenDelivered(msg.sender, false);
 			return false;
-		}
-
-		while (queue.qsize() < 1) {  // make sure the buyer always have ppl behind
-			continue;
 		}
 		queue.dequeue();
 		bool success = token.transfer(msg.sender, tokensAmount);
