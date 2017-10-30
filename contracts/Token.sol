@@ -9,7 +9,6 @@ import './interfaces/ERC20Interface.sol';
  */
 
 contract Token is ERC20Interface {
-	// YOUR CODE HERE
 
 	// we need functions from token including following:
 	// 	- token.mint(amount);
@@ -67,14 +66,14 @@ contract Token is ERC20Interface {
   /// @param _to The address of the recipient
   /// @param _value The amount of token to be transferred
   /// @return Whether the transfer was successful or not
-  function transferFrom(address _from, address _to, uint256 _value) public returns (bool success){
+  function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
     if (balances[_from] >= _value && _value > 0 && balances[_to] + _value > balances[_to]) {
-      if(msg.sender==_from){
+      if(msg.sender==_from) {
         balances[_from] -= _value;
         balances[_to] += _value;
         Transfer(_from, _to, _value);
         return true;
-      } else if (allowance(_from, msg.sender)<=_value){
+      } else if (allowance(_from, msg.sender)<=_value) {
         allowed[_from][msg.sender] -= _value;
         balances[_from] -= _value;
         balances[_to] += _value;
@@ -86,7 +85,7 @@ contract Token is ERC20Interface {
     }
   }
 
-  function refund(address _from, uint256 _value) public returns (bool success){
+  function refund(address _from, uint256 _value) public returns (bool success) {
     if (balances[_from] >= _value && _value > 0) {
       balances[_from] -= _value;
       return true;
@@ -97,7 +96,7 @@ contract Token is ERC20Interface {
 
   /// @param _owner The address from which the balance will be retrieved
   /// @return The balance
-  function balanceOf(address _owner) public constant returns (uint256 balance){
+  function balanceOf(address _owner) public constant returns (uint256 balance) {
     return balances[_owner];
   }
 
@@ -105,7 +104,7 @@ contract Token is ERC20Interface {
   /// @param _spender The address of the account able to transfer the tokens
   /// @param _value The amount of tokens to be approved for transfer
   /// @return Whether the approval was successful or not
-  function approve(address _spender, uint256 _value) public returns (bool success){
+  function approve(address _spender, uint256 _value) public returns (bool success) {
     allowed[msg.sender][_spender]+=_value;
     Approval(msg.sender, _spender, _value);
     return true;
@@ -114,9 +113,7 @@ contract Token is ERC20Interface {
   /// @param _owner The address of the account owning tokens
   /// @param _spender The address of the account able to transfer the tokens
   /// @return Amount of remaining tokens allowed to spent
-  function allowance(address _owner, address _spender) public constant returns (uint256 remaining){
+  function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {
     return allowed[_owner][_spender];
   }
-
-
 }
