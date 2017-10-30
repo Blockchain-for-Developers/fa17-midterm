@@ -33,7 +33,7 @@ contract('TestCrowdsale', function(accounts) {
 
 	/* Group test cases together 
 	 * Make sure to provide descriptive strings for method arguements and
-	 * assert statements
+	 * assert.statements
 	 */
 	describe('Initialization', function() {
 		it("TestInit", async function() {
@@ -56,31 +56,31 @@ contract('TestCrowdsale', function(accounts) {
 			// YOUR CODE HERE
 			let wei = 100;
 			let token = await crowdsale.weiToToken.call(wei);
-			assert equal(wei*exchangeRate, token.valueOf(), "incorrect excahngerate")
+			assert.equal(wei*exchangeRate, token.valueOf(), "incorrect excahngerate")
 		});
 		it("TestExchangeBack", async function() {
 			// YOUR CODE HERE
 			let token = 100;
 			let wei = await crowdsale.tokenToWei.call(token);
-			assert equal(token/exchangeRate, wei.valueOf(), "incorrect excahngerate")
+			assert.equal(token/exchangeRate, wei.valueOf(), "incorrect excahngerate")
 		});
 		it("TestDelivering", async function() {
 			// YOUR CODE HERE
 			let boolean = await crowdsale.deliver.call({from: buyer1, value: 10});
-			assert equal(true, boolean, "failed transaction")
+			assert.equal(true, boolean, "failed transaction")
 			let tokensold = await crowdsale.totalRaised.call();
 			let curBalance = await crowdsale.currentBalance.call();
-			assert equal(tokensold, 10, "different token sold amount");
-			assert equal(curBalance, 10*exchangeRate, "different currentBalance");
+			assert.equal(tokensold, 10, "different token sold amount");
+			assert.equal(curBalance, 10*exchangeRate, "different currentBalance");
 
 		});
 		it("TestRefund", async function() {
 			let boolean await crowdsale.refund.call(10*exchangeRate, {from: buyer1});
-			assert equal(true, boolean, "failed transaction");
+			assert.equal(true, boolean, "failed transaction");
 			let tokensold = await crowdsale.totalRaised.call();
 			let curBalance = await crowdsale.currentBalance.call();
-			assert equal(tokensold, 0, "different token sold amount");
-			assert equal(curBalance, 0, "different currentBalance");
+			assert.equal(tokensold, 0, "different token sold amount");
+			assert.equal(curBalance, 0, "different currentBalance");
 		});
 
 		// YOUR CODE HERE
