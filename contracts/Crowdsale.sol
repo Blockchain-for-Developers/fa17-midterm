@@ -115,7 +115,7 @@ contract Crowdsale {
 	}
 
 
-	function refund(uint256 amount) saleHasNotEnded() returns (bool) {
+	function refund(uint256 amount) public saleHasNotEnded() returns (bool) {
 		bool good = token.refund(msg.sender, amount);
 		if (good) {
 			uint256 refundAmount = tokenToWei(amount);
@@ -125,9 +125,13 @@ contract Crowdsale {
 		return good;
 	}
 
-	function withdrawFunds() saleHasEnded() isCreator() returns (bool) {
+	function withdrawFunds() public saleHasEnded() isCreator() returns (bool) {
 		return creator.send(currentBalence);
 	}
+
+	function removeContract() public isCreator() saleHasEnded() {
+		selfdestruct(msg.sender);
+	}    
 
 	function () { revert(); }
 
