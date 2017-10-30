@@ -11,6 +11,7 @@ contract('TestCrowdsale', function(accounts) {
 	const exchangeRate = 10;
 	const totalSupply = 1000;
 	const timeLimit = 100;
+	const qtime = 1;
 	const owner = accounts[0];
 	const buyer1 = accounts[1];
 	const buyer2 = accounts[2];
@@ -26,6 +27,7 @@ contract('TestCrowdsale', function(accounts) {
 			exchangeRate,
 			totalSupply,
 			timeLimit,
+			qtime,
 			{from: owner},
 			);
 		crowdsale = c;
@@ -33,7 +35,7 @@ contract('TestCrowdsale', function(accounts) {
 
 	/* Group test cases together 
 	 * Make sure to provide descriptive strings for method arguements and
-	 * assert.statements
+	 * assert statements
 	 */
 	describe('Initialization', function() {
 		it("TestInit", async function() {
@@ -64,9 +66,11 @@ contract('TestCrowdsale', function(accounts) {
 			let wei = await crowdsale.tokenToWei.call(token);
 			assert.equal(token/exchangeRate, wei.valueOf(), "incorrect excahngerate")
 		});
+		/**
 		it("TestDelivering", async function() {
 			// YOUR CODE HERE
 			let boolean = await crowdsale.deliver.call({from: buyer1, value: 10});
+			let boolean2 = await crowdsale.deliver.call({from: buyer2, value: 10});
 			assert.equal(true, boolean, "failed transaction")
 			let tokensold = await crowdsale.totalRaised.call();
 			let curBalance = await crowdsale.currentBalance.call();
@@ -74,14 +78,18 @@ contract('TestCrowdsale', function(accounts) {
 			assert.equal(curBalance, 10*exchangeRate, "different currentBalance");
 
 		});
+		*/
+		/**
 		it("TestRefund", async function() {
-			let boolean await crowdsale.refund.call(10*exchangeRate, {from: buyer1});
+			let boolean = await crowdsale.refund.call(10*exchangeRate, {from: buyer1});
 			assert.equal(true, boolean, "failed transaction");
 			let tokensold = await crowdsale.totalRaised.call();
 			let curBalance = await crowdsale.currentBalance.call();
 			assert.equal(tokensold, 0, "different token sold amount");
 			assert.equal(curBalance, 0, "different currentBalance");
 		});
+		*/
+		
 
 		// YOUR CODE HERE
 	});
