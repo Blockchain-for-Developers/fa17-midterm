@@ -82,14 +82,14 @@ contract Crowdsale {
 
 		queue.enqueue(msg.sender);
 
-		while (queue.checkPlace() > 1) {  // wait until being the first buyer
+		while (queue.checkPlace(msg.sender) > 1) {  // wait until being the first buyer
 			continue;
 		}
-		require(queue.checkPlace() == 1);
+		require(queue.checkPlace(msg.sender) == 1);
 
 		while (queue.qsize() < 1) {  // make sure the buyer always have ppl behind
 			queue.checkTime();
-			if (queue.checkPlace() == 0) {  // times up
+			if (queue.checkPlace(msg.sender) == 0) {  // times up
 				//revert();
 				msg.sender.transfer(msg.value);
 				TokenDelivered(msg.sender, false);
@@ -98,7 +98,7 @@ contract Crowdsale {
 			continue;
 		}
 		queue.checkTime();
-		if (queue.checkPlace() == 0) {  // times up
+		if (queue.checkPlace(msg.sender) == 0) {  // times up
 			//revert();
 			msg.sender.transfer(msg.value);
 			TokenDelivered(msg.sender, false);
