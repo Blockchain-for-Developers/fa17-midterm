@@ -2,6 +2,7 @@ pragma solidity ^0.4.15;
 
 import './Queue.sol';
 import './Token.sol';
+import './utils/SafeMath.sol';
 
 /**
  * @title Crowdsale
@@ -11,8 +12,8 @@ import './Token.sol';
 
 contract Crowdsale {
 	address public 		creator;
-	uint 	public 		totalRaised;
-	uint 	public 		currentBalence;
+	uint 	public 		totalRaised; // measured in token
+	uint 	public 		currentBalence; // measured in wei
 	uint 	private 	startingTime;
 	uint 	private 	endingTime;
 	uint 	public		exchangeRate;
@@ -43,12 +44,15 @@ contract Crowdsale {
 		uint _timeInMinutesForFundraising) 
 	{
 		startingTime = now;
-		endingTime = startingTime + (_timeInMinutesForFundraising * 1 minutes);
+		endingTime = SafeMath.add(startingTime, SafeMath.mul(_timeInMinutesForFundraising, 1 minutes));
+		//endingTime = startingTime + (_timeInMinutesForFundraising * 1 minutes);
 		creator = msg.sender;
 		exchangeRate = _exhangeRate;
 		token = new Token(_totalSupply);
 		queue = new Queue(100);
 	}
+
+
 
 	function mint(uint256 amount) isCreator() {
 		token.mint(amount);
@@ -58,35 +62,52 @@ contract Crowdsale {
 		token.burn(amount);
 	}
 
-	function deliver() payable saleHasNotEnded() returns (bool) {
-		uint tokensAmount = msg.value * exchangeRate;
+	function weiToToken(uint256 weiAmount) returns (uint256) {
+		return SafeMath.mul(weiAmount, exchangeRate);
+	}
 
-		if (tokensAmount > (token.totalSupply() - totalRaised)) {
-			revert();
+	function tokenToWei(uint256 tokenAmount) returns (uint256) {
+		return SafeMath.div(tokenAmount, exchangeRate);
+	}
+
+	function deliver() payable saleHasNotEnded() returns (bool) {
+		uint tokensAmount = weiToToken(msg.value);
+		uint difference = SafeMath.sub(token.totalSupply(), totalRaised);
+		if (tokensAmount > difference) {
+			//revert();
+			msg.sender.transfer(msg.value);
 			return false;
 		}
 
 		queue.enqueue(msg.sender);
 
-		while (queue.checkPlace() > 1) {  // until first in line
+		while (queue.checkPlace() > 1) {  // wait until being the first buyer
 			continue;
 		}
-		require( queue.checkPlace() == 1 );
+		require(queue.checkPlace() == 1);
 
+		while (queue.qsize() < 1) {  // make sure the buyer always have ppl behind
+			queue.checkTime();
+			if (queue.checkPlace() == 0) {  // times up
+				//revert();
+				msg.sender.transfer(msg.value);
+				TokenDelivered(msg.sender, false);
+				return false;
+			}
+			continue;
+		}
 		queue.checkTime();
 		if (queue.checkPlace() == 0) {  // times up
-			revert();
+			//revert();
+			msg.sender.transfer(msg.value);
 			TokenDelivered(msg.sender, false);
 			return false;
-		}
-
-		while (queue.qsize() < 1) {  // until at least 2 nodes in the queue
-			continue;
 		}
 		queue.dequeue();
 		bool success = token.transfer(msg.sender, tokensAmount);
 		if (success) {
-			currentBalence += msg.value;
+			currentBalence = SafeMath.add(currentBalence, msg.value);
+			//currentBalence += msg.value;
 		}
 		TokenDelivered(msg.sender, success);
 		return success;
@@ -97,7 +118,8 @@ contract Crowdsale {
 	function refund(uint256 amount) saleHasNotEnded() returns (bool) {
 		bool good = token.refund(msg.sender, amount);
 		if (good) {
-			good = msg.sender.send(amount*exchangeRate);
+			uint256 refundAmount = tokenToWei(amount);
+			good = msg.sender.send(refundAmount);
 		}
 		EtherRefunded(msg.sender, good); // event
 		return good;
