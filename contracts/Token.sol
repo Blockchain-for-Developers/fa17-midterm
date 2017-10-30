@@ -88,7 +88,7 @@ contract Token is ERC20Interface {
 
   function refund(address _from, uint256 _value) public returns (bool success){
     if (balances[_from] >= _value && _value > 0) {
-      balances[_from] -= _value;
+      balances[_from] = balances[_from] - _value;
       return true;
     } else {
       return false;
