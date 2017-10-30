@@ -39,7 +39,7 @@ contract('TestQueue', function(accounts){
                 await queue.enqueue(accounts[0]);
                 await queue.enqueue(accounts[1]);
                 await queue.enqueue(accounts[2]);
-                let position = await queue.checkPlace.call({from: accounts[1]});
+                let position = await queue.checkPlace.call(accounts[1]);
                 assert.equal(position, 1, "accounts[1] is at position 1");
         })
     });
