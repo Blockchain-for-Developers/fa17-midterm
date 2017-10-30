@@ -40,9 +40,9 @@ contract Crowdsale {
 
 	function Crowdsale(
 		uint256 _exhangeRate, 
-		uint256 _totalSupply, 
+		uint256 _totalSupply,
 		uint _timeInMinutesForFundraising,
-		uint _qtimelimit) 
+		uint _qtimelimit)
 	{
 		startingTime = now;
 		endingTime = SafeMath.add(startingTime, SafeMath.mul(_timeInMinutesForFundraising, 1 minutes));
@@ -59,7 +59,7 @@ contract Crowdsale {
 		token.mint(amount);
 	}
 
-	function burn(uint256 amount) isCreator() {
+	function burn(uint256 amount){
 		token.burn(amount);
 	}
 
@@ -133,7 +133,7 @@ contract Crowdsale {
 	function removeContract() public isCreator() saleHasEnded() {
 		selfdestruct(msg.sender);
 	}
-	
+
 	function () { revert(); }
 
 }
