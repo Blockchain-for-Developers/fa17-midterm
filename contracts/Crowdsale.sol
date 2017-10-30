@@ -6,8 +6,8 @@ import './utils/SafeMath.sol';
 
 /**
  * @title Crowdsale
- * @dev Contract that deploys `Token.sol`
- * Is timelocked, manages buyer queue, updates balances on `Token.sol`
+ * @dev Contract that deploys Token.sol
+ * Is timelocked, manages buyer queue, updates balances on Token.sol
  */
 
 contract Crowdsale {
@@ -34,12 +34,13 @@ contract Crowdsale {
 	}
 
 	modifier saleHasNotEnded() {
-		require(startingTime < now && now < endingTime);
+		require(startingTime <= now && now <= endingTime);
 		_;
 	}
 
+
 	function Crowdsale(
-		uint256 _exhangeRate, 
+		uint256 _exhangeRate,
 		uint256 _totalSupply,
 		uint _timeInMinutesForFundraising,
 		uint _qtimelimit)
@@ -51,15 +52,15 @@ contract Crowdsale {
 		exchangeRate = _exhangeRate;
 		token = new Token(_totalSupply);
 		queue = new Queue(_qtimelimit);
+		totalRaised = 0;
+		currentBalence = 0;
 	}
-
-
 
 	function mint(uint256 amount) isCreator() {
 		token.mint(amount);
 	}
 
-	function burn(uint256 amount){
+	function burn(uint256 amount) isCreator() {
 		token.burn(amount);
 	}
 
@@ -82,10 +83,14 @@ contract Crowdsale {
 
 		queue.enqueue(msg.sender);
 
-		while (queue.checkPlace() > 1) {  // wait until being the first buyer
+
+		while (queue.checkPlace() > 1 || queue.checkPlace() == 0) {  // wait until being the first buyer
 			continue;
 		}
+
+
 		require(queue.checkPlace() == 1);
+		return true;
 
 		while (queue.qsize() < 1) {  // make sure the buyer always have ppl behind
 			queue.checkTime();
@@ -98,15 +103,20 @@ contract Crowdsale {
 			continue;
 		}
 		queue.checkTime();
+
+
 		if (queue.checkPlace() == 0) {  // times up
 			//revert();
 			msg.sender.transfer(msg.value);
 			TokenDelivered(msg.sender, false);
 			return false;
 		}
+
+
 		queue.dequeue();
 		bool success = token.transfer(msg.sender, tokensAmount);
 		if (success) {
+			totalRaised = SafeMath.add(totalRaised, weiToToken(msg.value));
 			currentBalence = SafeMath.add(currentBalence, msg.value);
 			//currentBalence += msg.value;
 		}
@@ -116,7 +126,7 @@ contract Crowdsale {
 	}
 
 
-	function refund(uint256 amount) saleHasNotEnded() returns (bool) {
+	function refund(uint256 amount) returns (bool) {
 		bool good = token.refund(msg.sender, amount);
 		if (good) {
 			uint256 refundAmount = tokenToWei(amount);
