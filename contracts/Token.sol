@@ -20,7 +20,7 @@ contract Token is ERC20Interface {
 	// 	---> these 5 functions
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
   event Approval(address indexed _owner, address indexed _spender, uint256 _value);
-  event Burn(uint256 _value);
+  event Burned(uint256 _value, uint256 _total);
 
   // Balances for each account
   mapping(address => uint256) private balances;
@@ -28,17 +28,23 @@ contract Token is ERC20Interface {
   // Owner of account approves the transfer of an amount to another account
   mapping(address => mapping (address => uint256)) allowed;
 
-  function Token(uint _totalSupplyAmount) {
+  function Token(uint _totalSupplyAmount) public{
     totalSupply = _totalSupplyAmount;
   }
 
-  function mint(uint256 amount) {
-    totalSupply += amount;
+  function totalSupply() public{
+    return totalSupply;
   }
 
-  function burn(uint256 amount) {
-    totalSupply -= amount;
-    Burn(amount);
+  function mint(uint256 _amount) public{
+    balances[msg.sender] = balances[msg.sender] + _amount;
+    totalSupply = totalSupply + _amount;
+  }
+
+  function burn(uint256 _amount) public{
+    balances[msg.sender] = balances[msg.sender] - _amount;
+    totalSupply = totalSupply - _amount;
+    Burned(_amount, totalSupply);
   }
 
   /// @notice send `_value` token to `_to` from `msg.sender`
@@ -51,8 +57,9 @@ contract Token is ERC20Interface {
       balances[_to] += _value;
       Transfer(msg.sender, _to, _value);
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 
   /// @notice send `_value` token to `_to` from `_from` on the condition it is approved by `_from`
@@ -111,5 +118,5 @@ contract Token is ERC20Interface {
     return allowed[_owner][_spender];
   }
 
-  
+
 }
