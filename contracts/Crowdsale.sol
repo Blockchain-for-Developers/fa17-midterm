@@ -14,8 +14,8 @@ contract Crowdsale {
 	address public 		creator;
 	uint 	public 		totalRaised; // measured in token
 	uint 	public 		currentBalence; // measured in wei
-	uint 	private 	startingTime;
-	uint 	private 	endingTime;
+	uint 	public 	startingTime;
+	uint 	public 	endingTime;
 	uint 	public		exchangeRate;
 	Token   private		token;
 	Queue 	public 		queue;
@@ -41,7 +41,8 @@ contract Crowdsale {
 	function Crowdsale(
 		uint256 _exhangeRate, 
 		uint256 _totalSupply, 
-		uint _timeInMinutesForFundraising) 
+		uint _timeInMinutesForFundraising,
+		uint _qtimelimit) 
 	{
 		startingTime = now;
 		endingTime = SafeMath.add(startingTime, SafeMath.mul(_timeInMinutesForFundraising, 1 minutes));
@@ -49,7 +50,7 @@ contract Crowdsale {
 		creator = msg.sender;
 		exchangeRate = _exhangeRate;
 		token = new Token(_totalSupply);
-		queue = new Queue(100);
+		queue = new Queue(_qtimelimit);
 	}
 
 
@@ -115,7 +116,7 @@ contract Crowdsale {
 	}
 
 
-	function refund(uint256 amount) public saleHasNotEnded() returns (bool) {
+	function refund(uint256 amount) saleHasNotEnded() returns (bool) {
 		bool good = token.refund(msg.sender, amount);
 		if (good) {
 			uint256 refundAmount = tokenToWei(amount);
@@ -125,14 +126,14 @@ contract Crowdsale {
 		return good;
 	}
 
-	function withdrawFunds() public saleHasEnded() isCreator() returns (bool) {
+	function withdrawFunds() saleHasEnded() isCreator() returns (bool) {
 		return creator.send(currentBalence);
 	}
 
 	function removeContract() public isCreator() saleHasEnded() {
 		selfdestruct(msg.sender);
 	}
-
+	
 	function () { revert(); }
 
 }

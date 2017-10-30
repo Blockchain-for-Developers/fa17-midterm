@@ -11,6 +11,7 @@ contract('TestCrowdsale', function(accounts) {
     const exchangeRate = 10;
     const totalSupply = 1000;
     const timeLimit = 0;
+    const qtime = 1;
     const owner = accounts[0];
     const buyer1 = accounts[1];
     const buyer2 = accounts[2];
@@ -26,14 +27,15 @@ contract('TestCrowdsale', function(accounts) {
             exchangeRate,
             totalSupply,
             timeLimit,
+            qtime,
             {from: owner},
-        );
+            );
         crowdsale = c;
     });
 
     /* Group test cases together 
-        Make sure to provide descriptive strings for method arguements and
-        assert statements
+     * Make sure to provide descriptive strings for method arguements and
+     * assert statements
      */
     describe('Initialization', function() {
         it("TestInit", async function() {
@@ -50,7 +52,7 @@ contract('TestCrowdsale', function(accounts) {
         });
         // YOUR CODE HERE
     });
-
+    /**
     describe('Sale', function() {
         it("TestSaleAfterEnd", async function() {
             // YOUR CODE HERE
@@ -72,6 +74,8 @@ contract('TestCrowdsale', function(accounts) {
         
         // YOUR CODE HERE
     });
+    */
+    
 
     describe('Your string here', function() {
         // YOUR CODE HERE
