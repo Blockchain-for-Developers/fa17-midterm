@@ -11,21 +11,22 @@ contract('TestToken', function(accounts){
 
     describe('Test token operations', function(){
         it("Testing minting and burning",  async function() {
-            let total = await token.totalSupply.call();
-            assert.equal(total , 0, "totalSupply is initialized at 0");
-            await token.mint(5);
-            total = await token.totalSupply.call();
-            assert.equal(total , 5, "totalSupply should equal 5");
-            await token.burn(2);
-            total = await token.totalSupply.call();
-            assert.equal(total , 3, "totalSupply should equal 3");
+          let total = await token.totalSupply.call();
+          assert.equal(total , 0, "totalSupply is initialized at 0");
+          await token.mint(5);
+          total = await token.totalSupply.call();
+          console.log(token.totalSupply);
+          assert.equal(total , 5, "totalSupply should equal 5");
+          await token.burn(2);
+          total = await token.totalSupply.call();
+          assert.equal(total , 3, "totalSupply should equal 3");
         }),
         it("Testing transfer",  async function() {
           await token.mint(10);
           await token.transfer(accounts[1], 3);
-          console.log(await token.balanceOf(accounts[1]));
+          //console.log(await token.balanceOf(accounts[1]));
           await token.transfer(accounts[2], 4);
-          console.log(await token.balanceOf(accounts[2]));
+          //console.log(await token.balanceOf(accounts[2]));
           total1 = await token.balanceOf(accounts[1]);
           assert.equal(total1 , 3, "address 0 should have 3 in its account");
           total2 = await token.balanceOf(accounts[2]);
