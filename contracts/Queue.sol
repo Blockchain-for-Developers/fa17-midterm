@@ -81,7 +81,7 @@ contract Queue {
 	/* Places `addr` in the first empty position in the queue */
 	function enqueue(address addr) {
 		if(currentSize >= size){
-			revert();
+			//revert();
 			return;
 		}
 		ParticipantsList.push(Participant( addr, now ));
