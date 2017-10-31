@@ -37,7 +37,7 @@ contract Queue {
 
 	/* Returns the address of the person in the front of the queue */
 	function getFirst() constant returns(address) {
-		if (currentSize > 0){
+		if (currentSize > 0) {
 			return ParticipantsList[0].a;
 		}
 		return address(0);

@@ -106,7 +106,7 @@ contract Token is ERC20Interface {
   /// @param _value The amount of tokens to be approved for transfer
   /// @return Whether the approval was successful or not
   function approve(address _spender, uint256 _value) public returns (bool success){
-    allowed[msg.sender][_spender]+=_value;
+    allowed[msg.sender][_spender] += _value;
     Approval(msg.sender, _spender, _value);
     return true;
   }
